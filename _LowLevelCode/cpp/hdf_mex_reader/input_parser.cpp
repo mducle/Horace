@@ -183,7 +183,7 @@ class_handle<hdf_pix_accessor>* parse_inputs(int nlhs, int nrhs, const mxArray *
 		if (reader->n_threads == 0)reader->n_threads = 1;
 		if (reader->n_threads > 256) {
 			std::stringstream err;
-			err << " nthreads parameter ==  " << reader->n_threads
+			err << " n-threads parameter ==  " << reader->n_threads
 				<< " This does not look like a reasonable value. Something may get wrong\n";
 			throw_error("HDF_MEX_ACCESS:invalid_argument", err.str().c_str());
 		}
@@ -224,7 +224,7 @@ class_handle<hdf_pix_accessor>* parse_inputs(int nlhs, int nrhs, const mxArray *
 
 
 		if (n_blocks_provided == 0 || buf_size == 0 || num_first_block >= n_blocks) { // nothing to do. 
-			// reader will retrive this information after the read operation. The read operation would be idle in this case 
+			// reader will retrieve this information after the read operation. The read operation would be idle in this case 
 			size_t n_threads = reader->n_threads;
 			block_split_info.resize(n_threads + 1);
 			block_split_info[n_threads].n_blocks = num_first_block;
@@ -249,9 +249,9 @@ class_handle<hdf_pix_accessor>* parse_inputs(int nlhs, int nrhs, const mxArray *
 	// here we are processing the pixel read options now
 
 	// calculate number of pixels defined to read and compare it with the size of the buffer dedicated to read data
-	if (pos_in_the_first_block >= block_size[num_first_block]) { // possibiliy of invalid cache
+	if (pos_in_the_first_block >= block_size[num_first_block]) { // possibility of invalid cache
 		std::stringstream err;
-		err << " Incorrect information on the position of previous read operation completeon. It looks like npix/pix_pos cache is invalid:"
+		err << " Incorrect information on the position of previous read operation completion. It looks like npix/pix_pos cache is invalid:"
 			<< " n_first block to read: " << num_first_block << "\n num pixels in this block : " << block_size[num_first_block]
 			<< "\n Position in the first block: " << pos_in_the_first_block << std::endl;
 		throw_error("HDF_MEX_ACCESS:runtime_error", err.str().c_str());
