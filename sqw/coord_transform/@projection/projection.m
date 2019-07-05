@@ -95,6 +95,14 @@ classdef projection<aProjection
                 uoffset = this.projaxes_.uoffset;
             end
         end
+        function obj = set.uoffset(obj,uoffset)
+            if isempty(this.projaxes_)
+                error('PROJECTION:not_implemented',...
+                    'Can not set-up uoffset on uninitialized projection');
+            else
+                obj.projaxes_.uoffset = uoffset;
+            end
+        end
         function lab = get.lab(this)
             if isempty(this.projaxes_)
                 lab = this.data_lab_;
