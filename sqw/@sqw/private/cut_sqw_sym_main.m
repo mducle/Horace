@@ -134,7 +134,7 @@ function [wout,wsym] = cut_sqw_sym_main (data_source, ndims_source, varargin)
 
 hor_log_level = config_store.instance().get_value('herbert_config','log_level');
 
-
+nout = nargout;
 
 % Parse input arguments
 % ---------------------
@@ -199,7 +199,7 @@ for i=1:prod(sz)
     [i1,i2,i3,i4] = ind2sub(sz,i);
     pbin_tmp = {pbin{1}(i1,:),pbin{2}(i2,:),pbin{3}(i3,:),pbin{4}(i4,:)};
     if return_cut
-        if return_comp && prod(sz)>1
+        if return_comp && nout >1
             [wout(i),wsym{i}] = cut_sqw_sym_main_single (data_source,...
                 main_header, header, detpar, data, npixtot, pix_position,...
                 proj, pbin_tmp, pin, en, sym, opt, hor_log_level);
@@ -217,6 +217,6 @@ for i=1:prod(sz)
 end
 
 % If return_comp but only a single component, just copy the return cut
-if return_comp && prod(sz)==1
-    wsym = wout;
+if return_comp && numel(wsym)==1
+    wsym = wsym{1};
 end
