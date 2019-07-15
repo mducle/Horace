@@ -212,7 +212,7 @@ classdef test_change_crystal_1a < TestCase
             hpc_ds = hpc.get_data_to_store;
             clob2 = onCleanup(@()set(hpc_config,hpc_ds));
             hpc.combine_sqw_using = 'matlab';
-            hpc.build_sqw_in_parallel = 0;            
+            hpc.build_sqw_in_parallel = 0;
             
             qfwhh=0.1;                % Spread of Bragg peaks
             efwhh=1;                  % Energy width of Bragg peaks
