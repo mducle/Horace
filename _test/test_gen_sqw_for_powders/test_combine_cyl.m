@@ -54,7 +54,7 @@ classdef test_combine_cyl < TestCaseWithSave
             this.psi_1=0;
 
             if ~exist(this.spe_file_1,'file')
-                simulate_spe_testfunc (en, this.par_file, this.spe_file_1, @sqw_cylinder, [10,1], 0.3,...
+                horace_simulate_spe_testfunc (en, this.par_file, this.spe_file_1, @sqw_cylinder, [10,1], 0.3,...
                     this.efix, emode, this.alatt, angdeg, u, v, this.psi_1, omega, dpsi, gl, gs)
             end
             % Simulate second file, with reproducible random looking noise
@@ -62,7 +62,7 @@ classdef test_combine_cyl < TestCaseWithSave
             en=-9.5:2:95;
             this.psi_2=30;
             if ~exist(this.spe_file_2,'file')
-                simulate_spe_testfunc (en, this.par_file, this.spe_file_2, @sqw_cylinder, [10,1], 0.3,...
+                horace_simulate_spe_testfunc (en, this.par_file, this.spe_file_2, @sqw_cylinder, [10,1], 0.3,...
                     this.efix, emode, this.alatt, angdeg, u, v, this.psi_2, omega, dpsi, gl, gs)
             end
             % Handle class! test files are in SVN

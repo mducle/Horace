@@ -70,7 +70,7 @@ classdef test_gen_sqw_powder < TestCaseWithSave
             scale=0.1;
 
             if ~exist(spe_file,'file')
-                simulate_spe_testfunc (en, par_file, spe_file, @sqw_sc_hfm_testfunc, [ampl,SJ,gap,gamma,bkconst], scale,...
+                horace_simulate_spe_testfunc (en, par_file, spe_file, @sqw_sc_hfm_testfunc, [ampl,SJ,gap,gamma,bkconst], scale,...
                     efix, emode, alatt, angdeg, u, v, psi, omega, dpsi, gl, gs)
             end
             % clean up

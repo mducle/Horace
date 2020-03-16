@@ -242,7 +242,7 @@ classdef gen_sqw_accumulate_sqw_tests_common < TestCaseWithSave
             [en,efix, emode, alatt, angdeg, u, v, psi, omega, dpsi, gl, gs]=unpack(obj);
             for i=1:n_files
                 if ~(exist(spe_files{i},'file') == 2)
-                    simulate_spe_testfunc (en{i}, obj.par_file,spe_files{i}, @sqw_sc_hfm_testfunc, obj.pars, obj.scale,...
+                    horace_simulate_spe_testfunc (en{i}, obj.par_file,spe_files{i}, @sqw_sc_hfm_testfunc, obj.pars, obj.scale,...
                         efix(i), emode, alatt, angdeg, u, v, psi(i), omega(i), dpsi(i), gl(i), gs(i));
                 end
             end

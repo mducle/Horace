@@ -67,7 +67,7 @@ classdef test_gen_runfiles < TestCase
             pars = [1000, 8, 2, 4, 0]; % [Seff,SJ,gap,gamma,bkconst]
             scale = 0.3;
             for i = 1:nfiles_max
-                simulate_spe_testfunc(en{i}, par_file, spe_file{i}, @sqw_sc_hfm_testfunc, pars, scale, ...
+                horace_simulate_spe_testfunc(en{i}, par_file, spe_file{i}, @sqw_sc_hfm_testfunc, pars, scale, ...
                     efix(i), emode, alatt, angdeg, u, v, psi(i), omega(i), dpsi(i), gl(i), gs(i));
             end
 
