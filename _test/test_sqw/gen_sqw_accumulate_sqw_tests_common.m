@@ -108,6 +108,7 @@ classdef gen_sqw_accumulate_sqw_tests_common < TestCaseWithSave
             
             hc = hor_config;
             obj.working_dir = hc.working_directory;
+            horace_set_local_parallel_config();
             
             % build test file names
             obj.spe_file=cell(1,obj.nfiles_max);
