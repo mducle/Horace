@@ -17,6 +17,7 @@ function [new_config, old_parallel_conf] = horace_set_local_parallel_config()
     CONFIG_FOLDER = fullfile(tempdir(), 'config');
     SHARED_LOCAL_DIR = fullfile(tempdir(), 'local');
     SHARED_REMOTE_DIR = fullfile(tempdir(), 'remote');
+    WORKING_DIR = tempdir();
 
     old_parallel_conf = parallel_config().get_data_to_store();
     old_herbert_conf = herbert_config().get_data_to_store();
@@ -28,6 +29,7 @@ function [new_config, old_parallel_conf] = horace_set_local_parallel_config()
     new_config = parallel_config;
     new_config.shared_folder_on_local = SHARED_LOCAL_DIR;
     new_config.shared_folder_on_remote = SHARED_REMOTE_DIR;
+    new_config.working_directory = WORKING_DIR;
 
 
 function cleanup(herbert_conf, horace_conf)
