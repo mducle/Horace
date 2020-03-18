@@ -106,9 +106,20 @@ classdef gen_sqw_accumulate_sqw_tests_common < TestCaseWithSave
             
             addpath(obj.test_functions_path);
             
+            disp("............................................................");
+            disp("Before horace_set_local_parallel_config call...");
+            herbert_config
+            hor_config
+            parallel_config
+
             obj.working_dir = tempdir();
             horace_set_local_parallel_config();
-            
+
+            disp("After horace_set_local_parallel_config call...");
+            herbert_config
+            hor_config
+            parallel_config
+
             % build test file names
             obj.spe_file=cell(1,obj.nfiles_max);
             wkd = obj.working_dir;
