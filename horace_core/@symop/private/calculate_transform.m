@@ -26,10 +26,10 @@ function R = calculate_transform (obj, Minv)
 %          vector given in the orthonormal frame for which Minv is defined
 
 
-if is_identity(obj)
+if obj.is_identity
     R = eye(3);
     
-elseif is_reflection(obj)
+elseif obj.is_reflection
     % Determine the representation of u and v in the orthonormal frame
     e1 = Minv * obj.u_';
     e2 = Minv * obj.v_';
@@ -38,13 +38,13 @@ elseif is_reflection(obj)
     % Create reflection matrix in the orthonormal frame
     R = eye(3) - 2*(n*n');
     
-elseif is_rotation(obj)
+elseif obj.is_rotation
     % Express rotation vector in orthonormal frame
     n = Minv * obj.n_';
     % Perform active rotation (hence reversal of sign of theta
     R = rotvec_to_rotmat (-obj.theta_deg_*n/norm(n));
     
-elseif is_motion(obj)
+elseif obj.is_motion
     R = obj.W_;
 end
     

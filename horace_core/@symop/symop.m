@@ -30,6 +30,18 @@ classdef symop
     %   is_rotation     - Determine if a symmetry operation is a rotation
     %   is_reflection   - Determine if a symmetry operation is a reflection
     %   is_motion       - Determine if a symmetry operation was supplied as a complete motion
+    properties(Dependent)
+        % return the information about the symop
+        info
+        % if a symmetry operation is the identity operation
+        is_identity
+        % if a symmetry operation is a rotation
+        is_rotation
+        % - if a symmetry operation is a reflection
+        is_reflection
+        % Determine if a symmetry operation was supplied as a complete motion
+        is_motion
+    end
     
     properties (Access=private)
         uoffset_ = [];  % offset vector for symmetry operator (rlu) (row)
@@ -39,6 +51,12 @@ classdef symop
         theta_deg_ = [];% rotation angle (deg)
         W_ = [];        % motion transformation operation (real space matrix)
     end
+    %     methods(Static)
+    %         function infr= info(obj)
+    %             if
+    %         end
+    %
+    %     end
     
     methods
         %------------------------------------------------------------------
@@ -85,7 +103,10 @@ classdef symop
             %               almost certainly integers.
             %       offset  [Optional] The origin at which the transformation
             %               is performed, expressed in r.l.u.
-            %               Default: [0,0,0] 
+            %               Default: [0,0,0]
+            %
+            %   Sequence of operations:
+            %
             %
             % EXAMPLES:
             %   Rotation of 120 degress about [1,1,1]:
@@ -95,83 +116,83 @@ classdef symop
             %       this = symop ([1,1,0], [0,0,1], [2,0,0])
             
             if numel(varargin)>0
-                [ok,mess_refl,u,v,uoffset] = check_reflection_args (varargin{:});
-                if ok
-                    obj.uoffset_ = uoffset;
-                    obj.u_ = u;
-                    obj.v_ = v;
-                    return
+                if iscell(varargin{1})
+                    inputs = varargin{1};
+                    n_obj = numel(inputs);
+                    obj(n_obj) = obj;
+                    for i=1:n_obj
+                        in = inputs{i};
+                        obj(i) = build_single_symop_(obj(i),in{:});
+                    end
+                else
+                    obj = build_single_symop_(obj,varargin{:});
                 end
-                [ok,mess_rot,n,theta_deg,uoffset] = check_rotation_args (varargin{:});
-                if ok
-                    obj.uoffset_ = uoffset;
-                    obj.n_ = n;
-                    obj.theta_deg_ = theta_deg;
-                    return
-                end
-                [ok,mess_mot,W,uoffset] = check_motion_args(varargin{:});
-                if ok
-                    obj.W_ = W;
-                    obj.uoffset_ = uoffset;
-                    return
-                end
-                error('dummy:ID','%s\n*OR*\n%s\n*OR*\n%s',mess_refl,mess_rot,mess_mot);
             end
         end
-        
-        function disp (obj)
-            % Display information about the symmetry operator
+        function objsec = vertcat(obj,varargin)        
+            objsec = concat_seq_(obj,varargin{:});            
+        end
+        %
+        function objsec = horzcat(obj,varargin)
             %
-            %   >> disp(this)
+            objsec = concat_seq_(obj,varargin{:});
+        end
+        
+        function infr= get.info(obj)
+            % Return information about the symmetry operator
+            %
+            %   >>info(obj) -- display information about the object
             
             % Format three vector as string:
             vec2str = @(v)(['[',num2str(v(1)),', ',num2str(v(2)),', ',num2str(v(3)),']']);
             
             if isempty(obj)
-                disp('Empty symmetry operation object')
-            elseif numel(obj)>1
-                disp('Sequence of symmetry operations:')
-                disp(' ')
+                infr = 'Empty symmetry operation object';
+                return;
             end
             
-            indstr='';
-            for i=1:numel(obj)
-                if numel(obj)>1
-                    indstr = sprintf('[%d] ',i);
-                end
-                if is_identity(obj(i))
-                    disp([indstr,'Identity operator (no symmetrisation)'])
-                elseif is_rotation(obj(i))
-                    disp([indstr,'Rotation operator:'])
-                    disp(['       axis (rlu): ',vec2str(obj(i).n_)])
-                    disp(['      angle (deg): ',num2str(obj(i).theta_deg_)])
-                    disp(['     offset (rlu): ',vec2str(obj(i).uoffset_)])
-                elseif is_reflection(obj(i))
-                    disp([indstr,'Reflection operator:'])
-                    disp([' In-plane u (rlu): ',vec2str(obj(i).u_)])
-                    disp([' In-plane v (rlu): ',vec2str(obj(i).v_)])
-                    disp(['     offset (rlu): ',vec2str(obj(i).uoffset_)])
-                elseif is_motion(obj(i))
-                    disp([indstr,'Motion:'])
-                    if sum(abs(obj(i).uoffset_))>0
-                        fprintf(' % 1d % 1d % 1d    % g\n',obj(i).W_(1,:),obj(i).uoffset_(1));
-                        fprintf(' % 1d % 1d % 1d  + % g\n',obj(i).W_(2,:),obj(i).uoffset_(2));
-                        fprintf(' % 1d % 1d % 1d    % g\n',obj(i).W_(3,:),obj(i).uoffset_(3));
-                    else
-                        fprintf(' % 1d % 1d % 1d\n',obj(i).W_(1,:));
-                        fprintf(' % 1d % 1d % 1d\n',obj(i).W_(2,:));
-                        fprintf(' % 1d % 1d % 1d\n',obj(i).W_(3,:));
-                    end
+            
+            if obj.is_identity
+                infr = sprintf('Identity operator (no symmetrisation)\n');
+            elseif obj.is_rotation
+                infr = sprintf(['Rotation operator:\n',...
+                    '       axis (rlu): %s\n',...
+                    '      angle (deg): %d\n',...
+                    '     offset (rlu): %s\n'],...
+                    vec2str(obj.n_),obj.theta_deg_,vec2str(obj.uoffset_));
+            elseif obj.is_reflection
+                infr = sprintf(['Reflection operator:\n',...
+                    ' In-plane u (rlu): %s\n',...
+                    ' In-plane v (rlu): %s\n',...
+                    '     offset (rlu): %s\n'],...
+                    vec2str(obj.u_),vec2str(obj.v_),vec2str(obj.uoffset_));
+            elseif obj.is_motion
+                if sum(abs(obj.uoffset_))>0
+                    infr = sprintf(['Motion:\n',...
+                        ' % 1d % 1d % 1d  + % g\n',...
+                        ' % 1d % 1d % 1d  + % g\n',...
+                        ' % 1d % 1d % 1d  + % g\n'],...
+                        obj.W_(1,:),obj.uoffset_(1),...
+                        obj.W_(2,:),obj.uoffset_(2),...
+                        obj.W_(3,:),obj.uoffset_(3));
                 else
-                    error('Logic error - see developers')
+                    infr = sprintf(['%sMotion:\n',...
+                        ' % 1d % 1d % 1d\n',...
+                        ' % 1d % 1d % 1d\n',...
+                        ' % 1d % 1d % 1d\n'],...
+                        obj.W_(1,:),...
+                        obj.W_(2,:),...
+                        obj.W_(3,:));
                 end
-                disp(' ')
+            else
+                error('Logic error - see developers')
             end
+            
         end
         
         %------------------------------------------------------------------
         % Other methods
-        function status = is_identity(obj)
+        function status = get.is_identity(obj)
             % Determine if a symmetry operation is the identity operation
             %
             %   >> status = is_identity (this)
@@ -186,7 +207,7 @@ classdef symop
             end
         end
         
-        function status = is_rotation(obj)
+        function status = get.is_rotation(obj)
             % Determine if a symmetry operation is a rotation
             %
             %   >> status = is_rotation (this)
@@ -200,7 +221,7 @@ classdef symop
             end
         end
         
-        function status = is_reflection(obj)
+        function status = get.is_reflection(obj)
             % Determine if a symmetry operation is a reflection
             %
             %   >> status = is_reflection (this)
@@ -214,7 +235,7 @@ classdef symop
             end
         end
         
-        function status = is_motion(obj)
+        function status = get.is_motion(obj)
             if isscalar(obj)
                 status = ~isempty(obj.W_);
             else

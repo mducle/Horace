@@ -27,7 +27,7 @@ if ~iscell(sym), sym = {sym}; end   % make a cell array for convenience
 keep = true(size(sym));
 for i=1:numel(sym)
     sym{i} = sym{i}(:)';    % make row vector
-    if isempty(sym{i}) || (isa(sym{i},'symop') && all(is_identity(sym{i})))
+    if isempty(sym{i}) || (isa(sym{i},'symop') && all([sym{i}(:).is_identity]))
         keep(i) = false;
     elseif ~isa(sym{i},'symop')
         ok = false;
