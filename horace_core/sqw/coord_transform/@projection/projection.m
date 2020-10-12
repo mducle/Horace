@@ -7,9 +7,7 @@ classdef projection<aProjection
     %
     %  Defines coordinate transformations, used by cut_sqw when making
     %  Horace cuts
-    %
-    % $Revision:: 1759 ($Date:: 2020-02-10 16:06:00 +0000 (Mon, 10 Feb 2020) $)
-    %
+ 
     properties 
         %
     end
@@ -22,6 +20,7 @@ classdef projection<aProjection
         lab     %={'\zeta','\xi','\eta','E'};
         %
         %
+        nonorthogonal        
     end
     properties(Access=private)
         % reference to the class, which defines the projection axis
@@ -46,6 +45,8 @@ classdef projection<aProjection
             else
                 if isa(varargin{1},'projaxes')
                     proj.projaxes_ = varargin{1};
+                elseif isa(varargin{1},'projection')
+                    proj = varargin{1}; % copy constructor
                 else
                     proj.projaxes_ = projaxes(varargin{:});
                 end
@@ -59,6 +60,13 @@ classdef projection<aProjection
                 u = this.projaxes_.u;
             end
         end
+        function obj = set.u(obj,val)
+            if isempty(obj.projaxes_)
+                obj.projaxes_ = projaxes();
+            end
+            obj.projaxes_.u = val;
+        end
+        
         function v = get.v(this)
             if isempty(this.projaxes_)
                 v= 'dnd-Y-aligned';
@@ -66,6 +74,13 @@ classdef projection<aProjection
                 v = this.projaxes_.v;
             end
         end
+        function obj = set.v(obj,val)
+            if isempty(obj.projaxes_)
+                obj.projaxes_ = projaxes();
+            end
+            obj.projaxes_.v = val;
+        end
+        
         function w = get.w(this)
             if isempty(this.projaxes_)
                 w= [];
@@ -73,6 +88,13 @@ classdef projection<aProjection
                 w = this.projaxes_.w;
             end
         end
+        function obj = set.w(obj,val)
+            if isempty(obj.projaxes_)
+                obj.projaxes_ = projaxes();
+            end
+            obj.projaxes_.w = val;
+        end
+        
         function type = get.type(this)
             if isempty(this.projaxes_)
                 type = 'aaa';
@@ -95,13 +117,28 @@ classdef projection<aProjection
                 uoffset = this.projaxes_.uoffset;
             end
         end
+        
+        function obj = set.uoffset(obj,val)
+            if isempty(obj.projaxes_)
+                obj.projaxes_ = projaxes();
+            end
+            obj.projaxes_.uoffset = val;
+
+        end
         function lab = get.lab(this)
             if isempty(this.projaxes_)
                 lab = this.data_lab_;
             else
                 lab = this.projaxes_.lab;
             end
-        end       
+        end 
+        function is = get.nonorthogonal(obj)
+            if isempty(obj.projaxes_)
+                is = false;
+            else
+                is = obj.projaxes_.nonorthogonal;
+            end
+        end
         %------------------------------------------------------------------
         % Particular implementation of aProjection abstract interface
         %------------------------------------------------------------------

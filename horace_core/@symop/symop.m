@@ -129,65 +129,25 @@ classdef symop
                 end
             end
         end
-        function objsec = vertcat(obj,varargin)        
-            objsec = concat_seq_(obj,varargin{:});            
+        function objsec = vertcat(obj,varargin)
+            % combine number of symetry operations into single array of
+            % operations
+            objsec = concat_seq_(obj,varargin{:});
         end
         %
         function objsec = horzcat(obj,varargin)
-            %
+            % combine number of symetry operations into single array of
+            % operations
             objsec = concat_seq_(obj,varargin{:});
         end
         
-        function infr= get.info(obj)
-            % Return information about the symmetry operator
+        function info_string= get.info(obj)
+            % Return text information about the symmetry operator
             %
-            %   >>info(obj) -- display information about the object
-            
-            % Format three vector as string:
-            vec2str = @(v)(['[',num2str(v(1)),', ',num2str(v(2)),', ',num2str(v(3)),']']);
-            
-            if isempty(obj)
-                infr = 'Empty symmetry operation object';
-                return;
-            end
-            
-            
-            if obj.is_identity
-                infr = sprintf('Identity operator (no symmetrisation)\n');
-            elseif obj.is_rotation
-                infr = sprintf(['Rotation operator:\n',...
-                    '       axis (rlu): %s\n',...
-                    '      angle (deg): %d\n',...
-                    '     offset (rlu): %s\n'],...
-                    vec2str(obj.n_),obj.theta_deg_,vec2str(obj.uoffset_));
-            elseif obj.is_reflection
-                infr = sprintf(['Reflection operator:\n',...
-                    ' In-plane u (rlu): %s\n',...
-                    ' In-plane v (rlu): %s\n',...
-                    '     offset (rlu): %s\n'],...
-                    vec2str(obj.u_),vec2str(obj.v_),vec2str(obj.uoffset_));
-            elseif obj.is_motion
-                if sum(abs(obj.uoffset_))>0
-                    infr = sprintf(['Motion:\n',...
-                        ' % 1d % 1d % 1d  + % g\n',...
-                        ' % 1d % 1d % 1d  + % g\n',...
-                        ' % 1d % 1d % 1d  + % g\n'],...
-                        obj.W_(1,:),obj.uoffset_(1),...
-                        obj.W_(2,:),obj.uoffset_(2),...
-                        obj.W_(3,:),obj.uoffset_(3));
-                else
-                    infr = sprintf(['%sMotion:\n',...
-                        ' % 1d % 1d % 1d\n',...
-                        ' % 1d % 1d % 1d\n',...
-                        ' % 1d % 1d % 1d\n'],...
-                        obj.W_(1,:),...
-                        obj.W_(2,:),...
-                        obj.W_(3,:));
-                end
-            else
-                error('Logic error - see developers')
-            end
-            
+            %  >>info(obj)  -- return information about the object
+            %  >>[obj.info] -- return combined information about array of
+            %                  objects
+            info_string = build_info_(obj);
         end
         
         %------------------------------------------------------------------
@@ -245,11 +205,20 @@ classdef symop
                 end
             end
         end
-        
         %------------------------------------------------------------------
-        % Interfaces
-        [ok, mess, proj, pbin] = transform_proj (obj, alatt, angdeg, proj_in, pbin_in)
+        function sqw_obj = transform_sqw(obj,sqw_obj)
+            % apply symmetry operation to single sqw object
+            sqw_obj = transform_sqw_(obj,sqw_obj);
+        end
+        function [ok, mess, proj, pbin] = transform_proj (obj, alatt, angdeg, proj_in, pbin_in)
+            [ok, mess, proj, pbin] = transform_proj_(obj, alatt, angdeg, proj_in, pbin_in);
+        end
         
-        pix = transform_pix (obj, upix_to_rlu, upix_offset, pix_in)
+        % apply
+        function pix = transform_pix (obj, upix_to_rlu, upix_offset, pix_in)
+            pix = transform_pix_(obj, upix_to_rlu, upix_offset, pix_in);
+        end
+        %
+        
     end
 end

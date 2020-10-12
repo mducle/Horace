@@ -57,6 +57,10 @@ proj.type = 'ppp';
 proj.uoffset = data.uoffset';
 
 proj = projaxes(proj);
+proj = projection(proj);
+
+proj.alatt = data.alatt;
+proj.angdeg = data.angdeg;
 
 % Get binning
 % -------------------------

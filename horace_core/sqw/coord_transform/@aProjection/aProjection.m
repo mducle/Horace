@@ -6,8 +6,6 @@ classdef aProjection
     % Also defines generic operations on sqw object, which may be useful
     % and can be used by any projection class.
     %
-    % $Revision:: 1759 ($Date:: 2020-02-10 16:06:00 +0000 (Mon, 10 Feb 2020) $)
-    %
     properties(Dependent)
         % is special mex routines, written for performance reason and as such
         % deeply embedded with cut_sqw objects  are available for given
@@ -143,11 +141,48 @@ classdef aProjection
         function nbin = get.target_nbin(this)
             nbin = this.nbin_gt1_;
         end
+        %
+        function obj = set.alatt(obj,val)
+            if numel(val) == 1
+                obj.alatt_ = [abs(val),abs(val),abs(val)];
+            elseif numel(val) == 3
+                if size(val,2) == 3
+                    obj.alatt_ = val;
+                else
+                    obj.alatt_ = val';
+                end
+            else
+                error('APROJECTION:invalid_argument',...
+                    'lattice parameter has to be either value, or 3-element vector. Invalid input: %s',...
+                    evalc('disp(val)'));
+            end
+        end
+        %
+        function obj = set.angdeg(obj,val)
+            if any(val<0)
+                error('APROJECTION:invalid_argument',...
+                    'lattice angles have to be positive. Invalid input: %s',...
+                    evalc('disp(val)'));
+            end
+            if numel(val) == 1
+                obj.angdeg_ = [val,val,val];
+            elseif numel(val) == 3
+                if size(val,2) == 3
+                    obj.angdeg_ = val;
+                else
+                    obj.angdeg_ = val';
+                end
+            else
+                error('APROJECTION:invalid_argument',...
+                    'lattice parameter has to be either value, or 3-element vector. Invalid input: %s',...
+                    evalc('disp(val)'));
+            end
+        end
     end
     %
     methods(Access = protected)
         %
-        function isit= can_mex_cut_(self)
+        function isit= can_mex_cut_(~)
             isit = false;
         end
         function [nbin_in,pin]= get_input_data_binning_(this)

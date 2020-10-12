@@ -1,7 +1,7 @@
-function pix = transform_pix (obj, upix_to_rlu, upix_offset, pix_in)
+function pix = transform_pix_(obj, upix_to_rlu, upix_offset, pix_in)
 % Transform pixel coordinates into symmetry related coordinates
 %
-% The transformation converts the components of a vector which is 
+% The transformation converts the components of a vector which is
 % related by the symmetry operation into the equivalent vector. For example,
 % if the symmetry operation is a rotation by 90 degrees about
 % [0,0,1] in a cubic lattice with lattice parameter 2*pi, the point [0.3;0.1;2]
