@@ -27,8 +27,8 @@ For pull requests:
   occurs.
 - When Jenkins receives a notification from GitHub it will checkout out the
   relevant pull request branch and merge it with master.
-- PR labels are checked to determine CI process including which stages to run, 
-  and the Herbert version to pull 
+- PR labels are checked to determine CI process including which stages to run,
+  and the Herbert version to pull
 
 For nightly builds:
 
@@ -153,15 +153,15 @@ polling, as it does not require Jenkins to query GitHub on regular intervals.
 
 ### GitHub PR Labels
 
-GitHub PRs pass labels through to the Jenkins build system. These labels can be accessed via the `PR_LABELS` environment variable from within scripts. 
+GitHub PRs pass labels through to the Jenkins build system. These labels can be accessed via the `PR_LABELS` environment variable from within scripts.
 Currently, there are 3 labels which control the CI process and one which controls the build process.
 
 - `DO_NOT_CI` - Label which skips the Jenkins system entirely (primarily for use with documentation changes).
-- `do-not-build` - Label which skips the build (of C++ components) and test (C++ & MATLAB) stages of the pipeline 
+- `do-not-build` - Label which skips the build (of C++ components) and test (C++ & MATLAB) stages of the pipeline
                    (primarily for use with Jenkins Pipeline changes).
 - `do-not-test` - Label which skips the test (C++ & MATLAB) stage of the pipeline
                   (primarily for use with changing CMake build processes)
-- `Herbert_<branch>` - Build Herbert branch designated by `branch` as part of Horace 
+- `Herbert_<branch>` - Build Herbert branch designated by `branch` as part of Horace
 
 ## Jenkins GUI
 
@@ -256,39 +256,6 @@ scripts are named `build.<sh/ps1>` and have a similar API.
 The build scripts are intended to work locally as well as on Jenkins,
 so any Jenkins specific tasks should *not* be in the build scripts.
 
-### Actions
-
-| Argument (`.ps1`) | Argument (`.sh`)          |      |
-| ----------------- | ------------------------- | ---- |
-| `-configure`      | `--configure`, `-c`       | Create build folder and setup CMake |
-| `-build`          | `--build`, `-b`           | Perform build   |
-| `-test`           | `--test`, `-t`            | Run MATLAB and C++ tests |
-|                   | `--analyze`, `-a`         | Run static code analysis (Linux only) |
-| `-docs`           | `--docs`, `-d`            | Build HTML documentation |
-| `-push_docs`      | `--push_docs`             | Push built documentation to GitHub pages |
-| `-package`        | `--package`, `-p`         | Create archive of build artifacts |
-| `-print_versions` | `--print_versions`, `-v`  | Display versions of compilers, MATLAB and libraries used |
-
-### Options
-
-| Argument (`.ps1`) | Argument (`.sh`) | Default | |
-| --------------- | ------- | ---- | ---- |
-| `-build_tests` | `--build_tests`, `-X` | `ON` | Build test files (`ON` \| `OFF`) |
-| `-build_config` | `--build_config`, `-C` | `Release` | Build configuration to use (`Release` \| `Debug`) |
-| `-build_dir` | `--build_dir`, `-O` | `./build` | Output directory for CMake build |
-| `-cmake_flags` | `--cmake_flags`, `-F` | | Custom parameters to pass to CMake configure step |
-| `-vs_version`, `VS` | | `2017` | Target Visual Studio version for CMake output (1) |
-
-Actions may be combined.
-To call the script and only build use the `--build` flag,
-to build and test, use both flags `--build --test`.
-
-Notes:
-
-1. The Visual Studio version must match a configured Visual Studio release or
-an error will be thrown
-2. PowerShell uses *a single dash* for parameters, i.e. `-build -test -package`.
-
 ## Authentication
 
 In order to create merge commits and to post build statuses to GitHub some
@@ -372,7 +339,7 @@ These diagrams show the process of triggering and running builds of `master` bas
 
 ### Release
 
-These diagrams show the process of triggering and running builds for the purpose of review and testing before release. 
+These diagrams show the process of triggering and running builds for the purpose of review and testing before release.
 
 #### Herbert
 
@@ -384,7 +351,7 @@ These diagrams show the process of triggering and running builds for the purpose
 
 ### Deploy
 
-These diagrams show the process of triggering the automatic deployment of the release build to GitHub as a release. 
+These diagrams show the process of triggering the automatic deployment of the release build to GitHub as a release.
 
 #### Herbert
 
