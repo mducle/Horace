@@ -86,15 +86,18 @@ classdef test_symm < TestCase
             w3d_sqw=read_sqw(fullfile(this.testdir,'w3d_sqw.sqw'));
 
             w3d_sqw_sym=symmetrise_sqw(w3d_sqw,[0,0,1],[-1,1,0],[0,0,0]);
-            w3d_sqw_sym2=symmetrise_sqw(w3d_sqw_sym,[-1,1,0],[0,0,1],[0,0,0]);
+            % one pixel lost, pity, but bearable.
+            assertEqual(w3d_sqw.data.num_pixels-1,w3d_sqw_sym.data.num_pixels);
+            w3d_sqw_sym2=symmetrise_sqw(w3d_sqw_sym,[1,1,0],[0,0,1],[0,0,0]);
+            assertEqual(w3d_sqw_sym.data.num_pixels,w3d_sqw_sym2.data.num_pixels);
             w3d_sqw_sym3=symmetrise_sqw(w3d_sqw_sym2,[0,0,1],[-1,1,0],[0,0,0]);
+            assertEqual(w3d_sqw_sym3.data.num_pixels,w3d_sqw_sym2.data.num_pixels);
 
             cc1=cut(w3d_sqw_sym,[0.2,0.025,1],[-0.1,0.1],[0,1.4,99.8]);
             cc2=cut(w3d_sqw_sym3,[0.2,0.025,1],[-0.1,0.1],[0,1.4,99.8]);
 
             [ok,mess]=equal_to_tol(d2d(cc1),d2d(cc2),-1e-6,'ignore_str', 1);
             assertTrue(ok,['sqw symmetrisation fails, most likely due to cut rounding problem: ',mess])
-            
         end
 
         % ------------------------------------------------------------------------------------------------
@@ -120,11 +123,11 @@ classdef test_symm < TestCase
             % Diagonal symm axis
             w2d_qq_sqw=sqw(fullfile(this.testdir,'w2d_qq_sqw.sqw')); % CMDEV was read_sqw
             w2_2b_s=d2d(symmetrise_sqw(w2d_qq_sqw,[0,0,1],[0,1,0],[0,0,0]));% CMDEV was d2d
-            w2_2b_s=cut(w2_2b_s,[-1.0125,0.025+3.5e-8,1],[-1.0167,0.025+3.5e-8,1.0333]);
+            w2_2b_s=cut(w2_2b_s,[-1,0,1],[-1,0,1]);
 
             w2d_qq_d2d=d2d(fullfile(this.testdir,'w2d_qq_d2d.sqw'));
             w2_2b=symmetrise_horace_2d(w2d_qq_d2d,[0,0,1],[0,1,0],[0,0,0]);
-            w2_2b=cut(w2_2b,[-1,0.025,1],[-1.0167,0.025,1.0333]);
+            w2_2b=cut(w2_2b,[-1,0,1],[-1,0,1]);
 
             % Is a solution to validating these running a fit with our original sqw
             % function?
@@ -136,7 +139,7 @@ classdef test_symm < TestCase
             mf_s = mf_s.set_fun (@fake_cross_sec, [0.9*this.stiffness,this.gam,this.amp],[1,0,0]);
             [wfit_2b_s,fitdata_2b_s] = mf_s.fit();
 
-            assertTrue(equal_to_tol(fitdata_2b.p(1),fitdata_2b_s.p(1),-2e-2),'d2d symmetrisation about diagonal (non shoelace algorithm) failed')
+            assertTrue(equal_to_tol(fitdata_2b.p(1),fitdata_2b_s.p(1),-3e-2),'d2d symmetrisation about diagonal (non shoelace algorithm) failed')
 
         end
 

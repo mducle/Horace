@@ -74,7 +74,7 @@ classdef test_gen_sqw_accumulate_sqw_herbert <  ...
             % The communicatins occur between host and workers and between
             % workers themselves.
             %
-            skipTest('Test disabled due to intermittent failure/creation of temp files')
+            skipTest('Test disabled due to intermittent failure')
             worker_local = 'parallel_worker';
 
             mis = MPI_State.instance('clear');
@@ -211,7 +211,8 @@ classdef test_gen_sqw_accumulate_sqw_herbert <  ...
         end
 
         function test_do_job(obj)
-            skipTest('Test disabled due to intermittent failure  / new SQW loader not available')
+            
+            skipTest('Test disabled due to intermittent failure')
             mis = MPI_State.instance('clear');
             mis.is_tested = true;
             mis.is_deployed = true;
@@ -306,9 +307,9 @@ classdef test_gen_sqw_accumulate_sqw_herbert <  ...
             grid_size = [50,50,50,50];
             % prepare task outputs as in do_job method
             je1.task_outputs = struct('grid_size',grid_size,...
-                'img_range',[-1,-2,-3,-20;1,2,3,10]);
+                'img_db_range',[-1,-2,-3,-20;1,2,3,10]);
             je2.task_outputs = struct('grid_size',grid_size,...
-                'img_range',[-2,-3,-2,-10;2,3,2,15]);
+                'img_db_range',[-2,-3,-2,-10;2,3,2,15]);
             je2.finish_task();
             je1.finish_task();
 
@@ -318,7 +319,7 @@ classdef test_gen_sqw_accumulate_sqw_herbert <  ...
             res = mes.payload;
             res = res{1};
             assertEqual(res.grid_size,[50 50 50 50]);
-            assertElementsAlmostEqual(res.img_range,...
+            assertElementsAlmostEqual(res.img_db_range,...
                 [-1,-2,-3,-20;1,2,3,10]);
 
         end
@@ -326,23 +327,33 @@ classdef test_gen_sqw_accumulate_sqw_herbert <  ...
         %------------------------------------------------------------------
         % Block of code to disable some tests for debugging Jenkins jobs
         function test_accumulate_and_combine1to4(obj,varargin)
-            skipTest('Test disabled due to intermittent failure')
+            if is_jenkins && ispc
+            	skipTest('Test disabled due to intermittent failure')
+            end
             test_accumulate_and_combine1to4@gen_sqw_accumulate_sqw_tests_common(obj,varargin{:});
         end
         function test_accumulate_sqw1456(obj,varargin)
-            skipTest('Test disabled due to intermittent failure')
+            if is_jenkins && ispc
+            	skipTest('Test disabled due to intermittent failure')
+            end
             test_accumulate_sqw1456@gen_sqw_accumulate_sqw_tests_common(obj,varargin{:});
         end
         function test_accumulate_sqw11456(obj,varargin)
-            skipTest('Test disabled due to intermittent failure')
+            if is_jenkins && ispc
+            	skipTest('Test disabled due to intermittent failure')
+            end
             test_accumulate_sqw11456@gen_sqw_accumulate_sqw_tests_common(obj,varargin{:});
         end
         function test_gen_sqw(obj,varargin)
-            skipTest('Test disabled due to intermittent failure')
+            if is_jenkins && ispc
+            	skipTest('Test disabled due to intermittent failure')
+            end
             test_gen_sqw@gen_sqw_accumulate_sqw_tests_common(obj,varargin{:});
         end
         function test_accumulate_sqw14(obj,varargin)
-            skipTest('Test disabled due to intermittent failure')
+            if is_jenkins && ispc
+            	skipTest('Test disabled due to intermittent failure')
+            end
             test_accumulate_sqw14@gen_sqw_accumulate_sqw_tests_common(obj,varargin{:});
         end
 

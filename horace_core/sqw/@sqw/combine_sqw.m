@@ -153,11 +153,12 @@ if nints>=1
         intmax{i}=max([intmax_l{1,i} intmax_l{2,i}]);
     end
 
+
     intlimits=[cell2mat(intmin); cell2mat(intmax)];
     wout.data_.iint=intlimits;
 
     for i=1:nints
-        wout.data_.img_range(:,wout.data_.iax(i))=intlimits(:,i);
+        wout.data_.img_db_range(:,wout.data_.iax(i))=intlimits(:,i);
     end
 else
     wout.data_.iint = zeros(2,0);

@@ -47,6 +47,29 @@ classdef (Abstract)  DnDBase < SQWDnDBase
 
         wout = sqw_eval_pix_(wout, sqwfunc, ave_pix, pars);
     end
+    
+    methods (Static)
+        function w = make_dnd(data_obj)
+            if (isa(data_obj,'data_sqw_dnd'))
+                ndims = size(data_obj.pax,1);
+                if ndims == 0
+                    w = d0d(data_obj);
+                elseif ndims == 1
+                    w = d1d(data_obj);
+                elseif ndims == 2
+                    w = d2d(data_obj);
+                elseif ndims == 3
+                    w = d3d(data_obj);
+                elseif ndims == 4
+                    w = d4d(data_obj);
+                else
+                    error('HORACE:DnDBase:make dnd on data_sqw_dnd with wrong dimensions');
+                end
+            else
+                error('HORACE:DnDBase:make dnd on not data_sqw_dnd');
+            end
+        end
+    end
 
     methods
         % function signatures

@@ -102,7 +102,7 @@ for i=1:numel(win)
         [~, ien]=max(dax);  % index of energy axis in dax (energy will always be the largest, as pax(end) is energy if present
         data.dax=dax(dax~=dax(ien));
         if nd>=2
-            sz=size(win(i).data.s);
+            sz=size(win(i).data_.s);
             if nd>2
                 sz=sz(1:nd-1);          % 2D dataset or greater, so outer dimension is energy
             else
@@ -119,7 +119,7 @@ for i=1:numel(win)
     data.s = zeros(sz);
     data.e = zeros(sz);
     data.npix = ones(sz);
-    data.img_range = PixelData.EMPTY_RANGE_;  % Clear img_range
+    data_.img_db_range = PixelData.EMPTY_RANGE_;  % Clear img_range
 
     wout_disp(i).data_ = data;
 

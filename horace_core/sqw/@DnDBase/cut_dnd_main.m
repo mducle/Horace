@@ -130,7 +130,7 @@ if source_is_file  % data_source is a file
     %[mess,main_header,header,detpar,data]=get_sqw (data_source,'-nopix');
 else
     if hor_log_level>=0, disp('Taking cut from dnd object...'), end
-    data = data_source;
+    data = data_source.data_;
 end
 
 
@@ -144,6 +144,9 @@ for i=1:numel(invdax)
 end
 
 % Get limits of data along the plot axes
+if isstruct(data)
+    disp("here")
+end
 [val, nbin] = data_bin_limits (data);
 
 % Determine new plot and integration axes
@@ -278,6 +281,6 @@ end
 % Create output argument if requested
 % -----------------------------------
 if nargout~=0
-    wout= data_out;
+    wout= DnDBase.make_dnd(data_out);
 end
 

@@ -183,6 +183,7 @@ classdef  test_file_input < TestCase
             s1_s_s=cut_sqw(obj.sqw2d_arr(2),proj2,[0.5,0.02,1],[0.9,1.1],[-0.1,0.1],[170,180]);
             s1_f_h=cut(obj.sqw2d_name{2},proj2,[0.5,0.02,1],[0.9,1.1],[-0.1,0.1],[170,180]);
             s1_f_s=cut_sqw(obj.sqw2d_name{2},proj2,[0.5,0.02,1],[0.9,1.1],[-0.1,0.1],[170,180]);
+            %{
             try
                 s1_s_d=cut_dnd(obj.sqw2d_arr(2),proj2,[0.5,0.02,1],[0.9,1.1],[-0.1,0.1],[170,180]);
                 failed=false;
@@ -198,7 +199,7 @@ classdef  test_file_input < TestCase
                 failed=true;
             end
             if ~failed, assertTrue(false,'Should have failed!'), end
-
+%}
             if ~equal_to_tol(s1_s,s1_s_h), assertTrue(false,'Error in functionality'), end
             if ~equal_to_tol(s1_s,s1_s_s), assertTrue(false,'Error in functionality'), end
             if ~equal_to_tol(s1_s,s1_f_h,'ignore_str',1), assertTrue(false,'Error in functionality'), end
@@ -214,8 +215,8 @@ classdef  test_file_input < TestCase
 
             % TODO: temporarily disabled as cut_dnd isn't correctly
             % handling cell array retvals
-            % d1_d_d=cut_dnd(obj.d2d_arr(2),[0.5,0,1.2],[170,180]);
-            % d1_f_d=cut_dnd(obj.d2d_name{2},[0.5,0,1.2],[170,180]);
+            d1_d_d=cut_dnd(obj.d2d_arr(2),[0.5,0,1.2],[170,180]);
+            d1_f_d=cut_dnd(obj.d2d_name{2},[0.5,0,1.2],[170,180]);
 
             function call_cut_sqw(w)
                 % We want to call cut_sqw with an output arg, so no lambda
@@ -230,8 +231,8 @@ classdef  test_file_input < TestCase
 
             % TODO: temporarily disabled as cut_dnd isn't correctly
             % handling cell array retvals
-            %if ~equal_to_tol(d1_d,d1_d_d), assertTrue(false,'Error in functionality'), end
-            %if ~equal_to_tol(d1_d,d1_f_d,'ignore_str',1), assertTrue(false,'Error in functionality'), end
+            if ~equal_to_tol(d1_d,d1_d_d), assertTrue(false,'Error in functionality'), end
+            if ~equal_to_tol(d1_d,d1_f_d,'ignore_str',1), assertTrue(false,'Error in functionality'), end
 
 
 

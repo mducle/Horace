@@ -12,7 +12,7 @@ classdef (Abstract) SQWDnDBase
     end
 
     methods (Static)
-        [iax, iint, pax, p, noffset, nkeep, mess] = cut_dnd_calc_ubins (pbin, pin, nbin);
+        %[iax, iint, pax, p, noffset, nkeep, mess] = cut_dnd_calc_ubins (pbin, pin, nbin);
     end
 
     methods (Abstract, Access = protected)

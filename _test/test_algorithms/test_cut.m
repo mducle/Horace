@@ -1,5 +1,17 @@
 classdef test_cut < TestCase
-
+    % Testing cuts and comparing the results against the reference cuts.
+    %
+    % This is a non-standard test class, as it compares cut
+    % against saved reference, but the reference is not saved as .mat file
+    % as in normal TestCaseWithSave classes, but stored as binary sqw file.
+    %
+    % The interface made similar to TestCaseWithSave classes but is a bit simpler:
+    % If the constructor is called with '-save' option, the reference cut
+    % is generated afresh.
+    % The tests are run and compared against reference cut regardless of
+    % '-save' option provided as input to the constructor.
+    % Reference cut is generated in the constructor if '-save' option is
+    % provided
 properties
     FLOAT_TOL = 1e-5;
 
@@ -19,11 +31,32 @@ end
 
 methods
 
-    function obj = test_cut(~)
-        obj = obj@TestCase('test_cut');
+        function obj = test_cut(varargin)
+            save_reference = false;
+            if nargin == 0
+                name = 'test_cut';
+            else
+                if strcmpi(varargin{1},'-save')
+                    save_reference = true;
+                    name = 'test_cut';
+                else
+                    name = varargin{1};
+                    if nargin>1 && strcmpi(varargin{2},'-save')
+                        save_reference = true;
+                    end
+                end
+            end
+            obj = obj@TestCase(name);
         obj.sqw_4d = sqw(obj.sqw_file);
 
         obj.old_warn_state = warning('OFF', 'PIXELDATA:validate_mem_alloc');
+            %
+            if save_reference
+                fprintf('*** Rebuilding and overwriting reference cut file %s\n',...
+                    obj.ref_file);
+                sqw_cut = cut(obj.sqw_file, obj.ref_params{:});
+                save(sqw_cut,obj.ref_file);
+            end
     end
 
     function delete(obj)
@@ -238,7 +271,7 @@ methods
         skipTest("New sqw loader not available");
         pix_pg_size = 5e5;  % this gives two pages of pixels over obj.sqw_file
         outfile = fullfile(tmp_dir, 'tmp_outfile.sqw');
-        cleanup_config = set_temporary_config_options( ...
+            cleanup_config_handle = set_temporary_config_options( ...
             hor_config, ...
             'pixel_page_size', pix_pg_size, ...
             'use_mex', false ...
@@ -251,6 +284,8 @@ methods
         output_sqw = sqw(outfile);
 
         assertEqualToTol(output_sqw, ref_sqw, obj.FLOAT_TOL, 'ignore_str', true);
+            
+            clear cleanup_config_handle;
     end
 
     function test_calling_cut_with_no_outfile_and_no_nargout_throws_error(obj)
