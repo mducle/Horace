@@ -22,7 +22,11 @@ if numel(win)~=1
     error('Only a single sqw object is valid - cannot take an array of sqw objects')
 end
 
+psidisp('~/dump/cls', class(win))
+
 header_ave=header_average(win.header);
+
+psidisp('~/dump/clsy', fieldnames(header_ave))
 
 u0 = header_ave.uoffset;
 u = header_ave.u_to_rlu(1:3,1:3);
@@ -47,4 +51,3 @@ if ~u0(4)==0, en=en+u0(4); end
 
 % package as cell array of column vectors for convenience with fitting routines etc.
 qw = {qh(:), qk(:), ql(:), en(:)};
-
