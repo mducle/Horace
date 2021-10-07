@@ -40,10 +40,13 @@ else
 end
 en=win.data.pix.dE';
 
-if ~u0(1)==0, qh=qh+u0(1); end
-if ~u0(2)==0, qk=qk+u0(2); end
-if ~u0(3)==0, ql=ql+u0(3); end
-if ~u0(4)==0, en=en+u0(4); end
+if u0(1)~=0, qh=qh+u0(1); end
+if u0(2)~=0, qk=qk+u0(2); end
+if u0(3)~=0, ql=ql+u0(3); end
+if u0(4)~=0, en=en+u0(4); end
 
 % package as cell array of column vectors for convenience with fitting routines etc.
 qw = {qh(:), qk(:), ql(:), en(:)};
+
+end
+
